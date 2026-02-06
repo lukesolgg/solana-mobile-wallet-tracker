@@ -1,45 +1,39 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React from 'react';
+import { StatusBar, SafeAreaView, StyleSheet } from 'react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeContext, useThemeProvider } from './src/hooks/useTheme';
+import { AppNavigator } from './src/navigation/AppNavigator';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
+const App: React.FC = () => {
+  const themeValue = useThemeProvider();
 
   return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <ThemeContext.Provider value={themeValue}>
+        <StatusBar
+          barStyle={themeValue.isDark ? 'light-content' : 'dark-content'}
+          backgroundColor={themeValue.colors.background}
+        />
+        <SafeAreaView style={[styles.root, { backgroundColor: themeValue.colors.background }]}>
+          <AppNavigator />
+        </SafeAreaView>
+      </ThemeContext.Provider>
+    </QueryClientProvider>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  root: { flex: 1 },
 });
 
 export default App;
