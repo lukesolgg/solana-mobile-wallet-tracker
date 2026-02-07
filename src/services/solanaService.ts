@@ -17,18 +17,19 @@ import type {
   TransactionInfo,
   WalletData,
 } from '../types';
+import { CONFIG } from '../config';
 
 // ---------------------------------------------------------------------------
 // Configuration
 // ---------------------------------------------------------------------------
 
 const RPC_ENDPOINTS = {
-  mainnet: 'https://api.mainnet-beta.solana.com',
+  mainnet: `https://mainnet.helius-rpc.com/?api-key=${CONFIG.HELIUS_API_KEY}`,
   devnet: 'https://api.devnet.solana.com',
 };
 
-// Switch to 'devnet' for testing
-const ACTIVE_NETWORK: keyof typeof RPC_ENDPOINTS = 'devnet';
+// Switch to 'mainnet' for production, 'devnet' for testing
+const ACTIVE_NETWORK: keyof typeof RPC_ENDPOINTS = 'mainnet';
 
 let connection: Connection;
 

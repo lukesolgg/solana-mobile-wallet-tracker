@@ -17,6 +17,7 @@ import { useSavedAddresses } from '../hooks/useSavedAddresses';
 import { useSolBalance } from '../hooks/useWalletData';
 import { isValidSolanaAddress, shortenAddress } from '../utils';
 import type { SavedAddress } from '../types';
+import { GlowBackground } from '../components/GlowBackground';
 
 // ---------------------------------------------------------------------------
 // Saved Address Card
@@ -164,8 +165,8 @@ export const SavedScreen: React.FC = () => {
   );
 
   return (
-    <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { backgroundColor: colors.surface }]}>
+    <GlowBackground>
+      <View style={[styles.header, { backgroundColor: colors.surface + 'DD' }]}>
         <Text style={[styles.title, { color: colors.text }]}>Saved Addresses</Text>
         <TouchableOpacity
           style={[styles.addBtn, { backgroundColor: colors.primary }]}
@@ -266,7 +267,7 @@ export const SavedScreen: React.FC = () => {
           </View>
         </View>
       </Modal>
-    </View>
+    </GlowBackground>
   );
 };
 
@@ -277,7 +278,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 44,
+    paddingBottom: 12,
   },
   title: { fontSize: 20, fontWeight: '700' },
   addBtn: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8 },

@@ -1,33 +1,36 @@
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { useColorScheme } from 'react-native';
-
-const lightColors = {
-  primary: '#7C3AED',
-  accent: '#2DD4BF',
-  background: '#F8FAFC',
-  surface: '#FFFFFF',
-  card: '#FFFFFF',
-  text: '#0F172A',
-  textSecondary: '#64748B',
-  border: '#E2E8F0',
-  error: '#EF4444',
-  success: '#22C55E',
-};
 
 const darkColors = {
-  primary: '#A78BFA',
-  accent: '#2DD4BF',
-  background: '#0F172A',
-  surface: '#1E293B',
-  card: '#1E293B',
-  text: '#F1F5F9',
-  textSecondary: '#94A3B8',
-  border: '#334155',
-  error: '#F87171',
+  primary: '#4A90FF',
+  accent: '#5BA3FF',
+  background: '#111318',
+  backgroundGlow: '#0D1B2A',
+  surface: '#1A1D24',
+  card: '#1E2128',
+  text: '#F0F2F5',
+  textSecondary: '#8B9CB6',
+  border: '#2A2F3A',
+  error: '#FF6B6B',
   success: '#4ADE80',
+  gold: '#FFD700',
 };
 
-export type ThemeColors = typeof lightColors;
+const lightColors = {
+  primary: '#3B7DED',
+  accent: '#4A90FF',
+  background: '#F0F2F5',
+  backgroundGlow: '#E8EDF5',
+  surface: '#FFFFFF',
+  card: '#FFFFFF',
+  text: '#111318',
+  textSecondary: '#5A6A80',
+  border: '#D8DDE6',
+  error: '#EF4444',
+  success: '#22C55E',
+  gold: '#DAA520',
+};
+
+export type ThemeColors = typeof darkColors;
 
 interface ThemeContextValue {
   isDark: boolean;
@@ -36,14 +39,13 @@ interface ThemeContextValue {
 }
 
 export const ThemeContext = createContext<ThemeContextValue>({
-  isDark: false,
-  colors: lightColors,
+  isDark: true,
+  colors: darkColors,
   toggle: () => {},
 });
 
 export function useThemeProvider(): ThemeContextValue {
-  const systemScheme = useColorScheme();
-  const [isDark, setIsDark] = useState(systemScheme === 'dark');
+  const [isDark, setIsDark] = useState(true);
 
   const toggle = useCallback(() => setIsDark((prev) => !prev), []);
   const colors = useMemo(() => (isDark ? darkColors : lightColors), [isDark]);

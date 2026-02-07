@@ -15,6 +15,7 @@ import {
 import { useAppTheme } from '../hooks/useTheme';
 import { useSolBalance } from '../hooks/useWalletData';
 import { shortenAddress } from '../utils';
+import { GlowBackground } from '../components/GlowBackground';
 
 // ---------------------------------------------------------------------------
 // MWA Integration
@@ -173,8 +174,9 @@ export const ConnectScreen: React.FC = () => {
   };
 
   return (
+    <GlowBackground>
     <ScrollView
-      style={[styles.screen, { backgroundColor: colors.background }]}
+      style={styles.screen}
       contentContainerStyle={styles.content}
     >
       <Text style={[styles.title, { color: colors.text }]}>Connect Wallet</Text>
@@ -282,12 +284,13 @@ export const ConnectScreen: React.FC = () => {
 
       <View style={{ height: 40 }} />
     </ScrollView>
+    </GlowBackground>
   );
 };
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  content: { padding: 16, paddingTop: 8 },
+  content: { padding: 16, paddingTop: 44 },
   title: { fontSize: 24, fontWeight: '700', marginBottom: 4 },
   subtitle: { fontSize: 14, lineHeight: 20, marginBottom: 16 },
   card: {

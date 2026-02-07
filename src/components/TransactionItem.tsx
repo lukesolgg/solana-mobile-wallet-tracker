@@ -12,8 +12,10 @@ export const TransactionItem: React.FC<Props> = ({ tx }) => {
   const { colors } = useAppTheme();
 
   const isIn = tx.direction === 'in';
-  const dirColor = isIn ? colors.success : colors.error;
-  const dirIcon = isIn ? '↓' : '↑';
+  const isOut = tx.direction === 'out';
+  const dirColor = isIn ? colors.success : isOut ? colors.error : colors.textSecondary;
+  const dirIcon = isIn ? '↓' : isOut ? '↑' : '•';
+  const dirLabel = isIn ? 'Received' : isOut ? 'Sent' : 'Unknown';
   const timeStr = tx.timestamp
     ? new Date(tx.timestamp * 1000).toLocaleDateString(undefined, {
         month: 'short',
@@ -30,7 +32,7 @@ export const TransactionItem: React.FC<Props> = ({ tx }) => {
       </View>
       <View style={styles.info}>
         <Text style={[styles.type, { color: colors.text }]}>
-          {tx.type === 'transfer' ? 'Transfer' : 'Transaction'}
+          {dirLabel}
         </Text>
         <Text style={[styles.time, { color: colors.textSecondary }]}>{timeStr}</Text>
       </View>

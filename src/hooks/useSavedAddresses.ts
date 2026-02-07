@@ -54,5 +54,13 @@ export function useSavedAddresses() {
     [addresses],
   );
 
-  return { addresses, loading, add, remove, update, isSaved };
+  const getLabel = useCallback(
+    (address: string): string | undefined => {
+      const found = addresses.find((a) => a.address === address);
+      return found?.label;
+    },
+    [addresses],
+  );
+
+  return { addresses, loading, add, remove, update, isSaved, getLabel };
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, SafeAreaView, StyleSheet } from 'react-native';
+import { StatusBar, View, StyleSheet } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeContext, useThemeProvider } from './src/hooks/useTheme';
 import { AppNavigator } from './src/navigation/AppNavigator';
@@ -21,12 +21,13 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeContext.Provider value={themeValue}>
         <StatusBar
-          barStyle={themeValue.isDark ? 'light-content' : 'dark-content'}
-          backgroundColor={themeValue.colors.background}
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
         />
-        <SafeAreaView style={[styles.root, { backgroundColor: themeValue.colors.background }]}>
+        <View style={[styles.root, { backgroundColor: themeValue.colors.background }]}>
           <AppNavigator />
-        </SafeAreaView>
+        </View>
       </ThemeContext.Provider>
     </QueryClientProvider>
   );
