@@ -1,13 +1,25 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from '../hooks/useTheme';
+import { HomeScreen } from '../screens/HomeScreen';
 import { SearchScreen } from '../screens/SearchScreen';
 import { SavedScreen } from '../screens/SavedScreen';
 import { ConnectScreen } from '../screens/ConnectScreen';
+import { SwapScreen } from '../screens/SwapScreen';
+import { TokenDetailScreen } from '../screens/TokenDetailScreen';
 
 const Tab = createBottomTabNavigator();
+const SearchStack = createStackNavigator();
+
+const SearchStackScreen: React.FC = () => (
+  <SearchStack.Navigator screenOptions={{ headerShown: false }}>
+    <SearchStack.Screen name="SearchMain" component={SearchScreen} />
+    <SearchStack.Screen name="TokenDetail" component={TokenDetailScreen} />
+  </SearchStack.Navigator>
+);
 
 export const AppNavigator: React.FC = () => {
   const { colors, isDark } = useAppTheme();
@@ -19,9 +31,9 @@ export const AppNavigator: React.FC = () => {
         colors: {
           primary: colors.primary,
           background: colors.background,
-          card: colors.surface,
+          card: colors.background,
           text: colors.text,
-          border: colors.border,
+          border: 'transparent',
           notification: colors.accent,
         },
         fonts: {
@@ -36,35 +48,63 @@ export const AppNavigator: React.FC = () => {
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: colors.surface,
-            borderTopColor: colors.border,
-            borderTopWidth: 0.5,
+            backgroundColor: colors.background,
+            borderTopWidth: 0,
             elevation: 0,
             paddingTop: 4,
+            paddingBottom: 8,
           },
-          tabBarActiveTintColor: colors.primary,
+          tabBarActiveTintColor: '#FFFFFF',
           tabBarInactiveTintColor: colors.textSecondary,
+          tabBarLabelStyle: {
+            fontSize: 11,
+            fontWeight: '500',
+          },
         }}
       >
         <Tab.Screen
-          name="Search"
-          component={SearchScreen}
+          name="Home"
+          component={HomeScreen}
           options={{
-            tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>🔍</Text>,
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="home-outline" size={22} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Search"
+          component={SearchStackScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="magnify" size={22} color={color} />
+            ),
           }}
         />
         <Tab.Screen
           name="Saved"
           component={SavedScreen}
           options={{
-            tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>📋</Text>,
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="bookmark-outline" size={22} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Swap"
+          component={SwapScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="swap-horizontal" size={22} color={color} />
+            ),
           }}
         />
         <Tab.Screen
           name="Connect"
           component={ConnectScreen}
           options={{
-            tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>👛</Text>,
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="wallet-outline" size={22} color={color} />
+            ),
           }}
         />
       </Tab.Navigator>

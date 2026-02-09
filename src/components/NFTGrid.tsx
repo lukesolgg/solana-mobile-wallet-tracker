@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from '../hooks/useTheme';
 import type { NFTAsset } from '../types';
 
-const GRID_GAP = 8;
+const GRID_GAP = 10;
 const PADDING = 16;
-const COLS = 3;
+const COLS = 2;
 const itemWidth = (Dimensions.get('window').width - PADDING * 2 - GRID_GAP * (COLS - 1)) / COLS;
 
 interface Props {
@@ -28,10 +29,10 @@ export const NFTGrid: React.FC<Props> = ({ nfts }) => {
       {nfts.map((nft) => (
         <View
           key={nft.mint}
-          style={[styles.nftCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+          style={[styles.nftCard, { backgroundColor: colors.card }]}
         >
-          <View style={[styles.nftImage, { backgroundColor: colors.primary + '15' }]}>
-            <Text style={{ fontSize: 24 }}>🖼</Text>
+          <View style={[styles.nftImage, { backgroundColor: colors.background }]}>
+            <MaterialCommunityIcons name="image-outline" size={28} color={colors.textSecondary} />
           </View>
           <Text style={[styles.nftName, { color: colors.text }]} numberOfLines={1}>
             {nft.name}
@@ -47,13 +48,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: PADDING,
+    paddingTop: 8,
     gap: GRID_GAP,
   },
-  empty: { alignItems: 'center', padding: 20 },
+  empty: { alignItems: 'center', padding: 24 },
   nftCard: {
     width: itemWidth,
-    borderRadius: 10,
-    borderWidth: 1,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   nftImage: {
@@ -62,5 +63,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  nftName: { fontSize: 11, fontWeight: '600', padding: 6 },
+  nftName: { fontSize: 13, fontWeight: '600', padding: 10 },
 });

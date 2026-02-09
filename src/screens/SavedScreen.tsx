@@ -12,16 +12,13 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from '../hooks/useTheme';
 import { useSavedAddresses } from '../hooks/useSavedAddresses';
 import { useSolBalance } from '../hooks/useWalletData';
 import { isValidSolanaAddress, shortenAddress } from '../utils';
 import type { SavedAddress } from '../types';
 import { GlowBackground } from '../components/GlowBackground';
-
-// ---------------------------------------------------------------------------
-// Saved Address Card
-// ---------------------------------------------------------------------------
 
 const SavedAddressCard: React.FC<{
   item: SavedAddress;
@@ -32,24 +29,6 @@ const SavedAddressCard: React.FC<{
   const { colors } = useAppTheme();
   const { data: balance, isLoading } = useSolBalance(item.address);
 
-  const handleRename = () => {
-    Alert.prompt(
-      'Rename Wallet',
-      'Enter a new label:',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Save',
-          onPress: (text) => {
-            if (text && text.trim()) onRename(item.id, text.trim());
-          },
-        },
-      ],
-      'plain-text',
-      item.label,
-    );
-  };
-
   const handleRemove = () => {
     Alert.alert('Remove Address', `Remove "${item.label}" from saved list?`, [
       { text: 'Cancel', style: 'cancel' },
@@ -58,7 +37,7 @@ const SavedAddressCard: React.FC<{
   };
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+    <View style={[styles.card, { backgroundColor: colors.card }]}>
       <View style={styles.cardHeader}>
         <View style={styles.cardHeaderLeft}>
           <Text style={[styles.label, { color: colors.text }]}>{item.label}</Text>
@@ -67,18 +46,15 @@ const SavedAddressCard: React.FC<{
           </Text>
         </View>
         <View style={styles.cardActions}>
-          <TouchableOpacity onPress={handleRename} style={styles.actionBtn}>
-            <Text style={{ color: colors.primary, fontSize: 16 }}>✏️</Text>
-          </TouchableOpacity>
           <TouchableOpacity onPress={handleRemove} style={styles.actionBtn}>
-            <Text style={{ color: colors.error, fontSize: 16 }}>🗑</Text>
+            <MaterialCommunityIcons name="trash-can-outline" size={18} color={colors.textSecondary} />
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.balanceRow}>
         {isLoading ? (
-          <ActivityIndicator size="small" color={colors.primary} />
+          <ActivityIndicator size="small" color={colors.text} />
         ) : (
           <Text style={[styles.balanceText, { color: colors.text }]}>
             {balance !== undefined
@@ -88,7 +64,6 @@ const SavedAddressCard: React.FC<{
         )}
       </View>
 
-      {/* Notification Toggle */}
       <View style={[styles.notifRow, { borderTopColor: colors.border }]}>
         <Text style={[styles.notifLabel, { color: colors.textSecondary }]}>
           Tx Notifications
@@ -98,7 +73,7 @@ const SavedAddressCard: React.FC<{
             styles.toggle,
             {
               backgroundColor: item.notificationsEnabled
-                ? colors.accent
+                ? colors.primary
                 : colors.textSecondary + '40',
             },
           ]}
@@ -118,10 +93,6 @@ const SavedAddressCard: React.FC<{
     </View>
   );
 };
-
-// ---------------------------------------------------------------------------
-// Saved Screen
-// ---------------------------------------------------------------------------
 
 export const SavedScreen: React.FC = () => {
   const { colors } = useAppTheme();
@@ -157,7 +128,7 @@ export const SavedScreen: React.FC = () => {
       if (enabled) {
         Alert.alert(
           'Notifications Enabled',
-          'You\'ll be notified of new transactions above 0.1 SOL. Polling runs every 5 minutes in background.',
+          'You\'ll be notified of new transactions above 0.1 SOL.',
         );
       }
     },
@@ -166,25 +137,25 @@ export const SavedScreen: React.FC = () => {
 
   return (
     <GlowBackground>
-      <View style={[styles.header, { backgroundColor: colors.surface + 'DD' }]}>
-        <Text style={[styles.title, { color: colors.text }]}>Saved Addresses</Text>
+      <View style={styles.header}>
+        <Text style={[styles.title, { color: colors.text }]}>Saved</Text>
         <TouchableOpacity
-          style={[styles.addBtn, { backgroundColor: colors.primary }]}
+          style={[styles.addBtn, { backgroundColor: colors.card }]}
           onPress={() => setShowAddModal(true)}
         >
-          <Text style={styles.addBtnText}>+ Add</Text>
+          <MaterialCommunityIcons name="plus" size={20} color={colors.text} />
         </TouchableOpacity>
       </View>
 
       {loading ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.text} />
         </View>
       ) : addresses.length === 0 ? (
         <View style={styles.center}>
-          <Text style={{ fontSize: 48 }}>📋</Text>
+          <MaterialCommunityIcons name="bookmark-outline" size={48} color={colors.textSecondary} />
           <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-            No saved addresses yet. Search for a wallet and tap "Save" to add it here.
+            No saved addresses yet. Search for a wallet and tap the bookmark to save it.
           </Text>
         </View>
       ) : (
@@ -206,7 +177,7 @@ export const SavedScreen: React.FC = () => {
       {/* Add Modal */}
       <Modal visible={showAddModal} transparent animationType="slide">
         <View style={styles.modalOverlay}>
-          <View style={[styles.modal, { backgroundColor: colors.surface }]}>
+          <View style={[styles.modal, { backgroundColor: colors.card }]}>
             <Text style={[styles.modalTitle, { color: colors.text }]}>Add Wallet Address</Text>
 
             <TextInput
@@ -241,7 +212,7 @@ export const SavedScreen: React.FC = () => {
                   borderColor: colors.border,
                 },
               ]}
-              placeholder="Label (optional, e.g. My Portfolio)"
+              placeholder="Label (optional)"
               placeholderTextColor={colors.textSecondary}
               value={newLabel}
               onChangeText={setNewLabel}
@@ -249,13 +220,13 @@ export const SavedScreen: React.FC = () => {
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={[styles.modalBtn, { backgroundColor: colors.textSecondary + '30' }]}
+                style={[styles.modalBtn, { backgroundColor: colors.background }]}
                 onPress={() => {
                   setShowAddModal(false);
                   setAddError('');
                 }}
               >
-                <Text style={{ color: colors.text, fontWeight: '600' }}>Cancel</Text>
+                <Text style={{ color: colors.textSecondary, fontWeight: '600' }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalBtn, { backgroundColor: colors.primary }]}
@@ -272,24 +243,27 @@ export const SavedScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  screen: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 44,
+    paddingTop: 48,
     paddingBottom: 12,
   },
-  title: { fontSize: 20, fontWeight: '700' },
-  addBtn: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8 },
-  addBtnText: { color: '#FFF', fontWeight: '600', fontSize: 14 },
+  title: { fontSize: 28, fontWeight: '700' },
+  addBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 40 },
-  emptyText: { fontSize: 15, textAlign: 'center', marginTop: 16, lineHeight: 22 },
+  emptyText: { fontSize: 14, textAlign: 'center', marginTop: 16, lineHeight: 22 },
   list: { padding: 16, paddingBottom: 100 },
   card: {
     borderRadius: 14,
-    borderWidth: 1,
     marginBottom: 12,
     overflow: 'hidden',
   },
@@ -324,10 +298,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   toggleDot: { width: 20, height: 20, borderRadius: 10 },
-  // Modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.7)',
     justifyContent: 'flex-end',
   },
   modal: {

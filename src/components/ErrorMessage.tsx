@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme } from '../hooks/useTheme';
 
 interface Props {
@@ -11,12 +12,12 @@ export const ErrorMessage: React.FC<Props> = ({ message, onRetry }) => {
   const { colors } = useAppTheme();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.error + '10' }]}>
-      <Text style={{ fontSize: 28, marginBottom: 8 }}>⚠️</Text>
-      <Text style={[styles.text, { color: colors.error }]}>{message}</Text>
+    <View style={[styles.container, { backgroundColor: colors.card }]}>
+      <MaterialCommunityIcons name="alert-circle-outline" size={28} color={colors.error} style={{ marginBottom: 8 }} />
+      <Text style={[styles.text, { color: colors.textSecondary }]}>{message}</Text>
       {onRetry && (
         <TouchableOpacity
-          style={[styles.retryBtn, { backgroundColor: colors.error + '20' }]}
+          style={[styles.retryBtn, { backgroundColor: colors.error + '15' }]}
           onPress={onRetry}
         >
           <Text style={{ color: colors.error, fontWeight: '600' }}>Retry</Text>
